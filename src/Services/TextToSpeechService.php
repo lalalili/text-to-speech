@@ -132,6 +132,18 @@ class TextToSpeechService implements TextToSpeechServiceInterface
             throw new InvalidArgumentException('SSML input is not allowed.');
         }
 
+        if (trim($options->voice) === '') {
+            throw new InvalidArgumentException('Voice is required.');
+        }
+
+        if (trim($options->languageCode) === '') {
+            throw new InvalidArgumentException('Language code is required.');
+        }
+
+        if (trim($options->audioFormat) === '') {
+            throw new InvalidArgumentException('Audio format is required.');
+        }
+
         $this->assertAllowed('voice', $options->voice, $driver);
         $this->assertAllowed('language', $options->languageCode, $driver);
         $this->assertAllowed('audio_format', $options->audioFormat, $driver);
