@@ -9,6 +9,8 @@ use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 use Lalalili\TextToSpeech\Contracts\TextToSpeechDriverInterface;
 use Lalalili\TextToSpeech\Support\TextToSpeechOptions;
+use RuntimeException;
+use Throwable;
 
 class GoogleCloudTextToSpeechDriver implements TextToSpeechDriverInterface
 {
@@ -42,7 +44,14 @@ class GoogleCloudTextToSpeechDriver implements TextToSpeechDriverInterface
                 $audioConfig->setEffectsProfileId($this->normalizeEffectsProfileId($options->effectsProfileId));
             }
 
-            $response = $client->synthesizeSpeech($synthesisInput, $voice, $audioConfig);
+            try {
+                $response = $client->synthesizeSpeech($synthesisInput, $voice, $audioConfig);
+            } catch (Throwable $exception) {
+                throw new RuntimeException(
+                    sprintf('Google Text-to-Speech request failed: %s', $exception->getMessage()),
+                    previous: $exception,
+                );
+            }
 
             return $response->getAudioContent();
         } finally {
