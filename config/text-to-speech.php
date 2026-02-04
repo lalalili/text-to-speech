@@ -56,6 +56,14 @@ return [
         ],
     ],
 
+    'cleanup' => [
+        'enabled' => env('TTS_CLEANUP_ENABLED', true),
+        'days' => (int) env('TTS_CLEANUP_DAYS', 30),
+        'chunk' => (int) env('TTS_CLEANUP_CHUNK', 200),
+        'dry_run' => (bool) env('TTS_CLEANUP_DRY_RUN', false),
+        'time' => env('TTS_CLEANUP_TIME', '02:40'),
+    ],
+
     'drivers' => [
         'google' => [
             'credentials' => env('GOOGLE_TTS_CREDENTIALS'),
