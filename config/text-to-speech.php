@@ -21,6 +21,22 @@ $ttsQueueBackoff = is_string($ttsQueueBackoff)
     ? array_values(array_filter(array_map('intval', array_map('trim', explode(',', $ttsQueueBackoff)))))
     : [];
 
+$parseList = static function (mixed $value): array {
+    if (! is_string($value) || trim($value) === '') {
+        return [];
+    }
+
+    return array_values(array_filter(array_map('trim', explode(',', $value))));
+};
+
+$googleAllowedVoices = $parseList(env('GOOGLE_TTS_ALLOWED_VOICES'));
+$googleAllowedLanguages = $parseList(env('GOOGLE_TTS_ALLOWED_LANGUAGES'));
+$googleAllowedAudioFormats = $parseList(env('GOOGLE_TTS_ALLOWED_AUDIO_FORMATS'));
+
+$azureAllowedVoices = $parseList(env('AZURE_TTS_ALLOWED_VOICES'));
+$azureAllowedLanguages = $parseList(env('AZURE_TTS_ALLOWED_LANGUAGES'));
+$azureAllowedAudioFormats = $parseList(env('AZURE_TTS_ALLOWED_AUDIO_FORMATS'));
+
 return [
     'default' => env('TTS_DRIVER', 'google'),
 
@@ -64,6 +80,10 @@ return [
         'time' => env('TTS_CLEANUP_TIME', '02:40'),
     ],
 
+    'security' => [
+        'allow_ssml' => env('TTS_ALLOW_SSML', false),
+    ],
+
     'drivers' => [
         'google' => [
             'credentials' => env('GOOGLE_TTS_CREDENTIALS'),
@@ -74,6 +94,9 @@ return [
             'audio_format' => env('GOOGLE_TTS_AUDIO_FORMAT', 'mp3'),
             'sample_rate_hertz' => $sampleRateHertz,
             'effects_profile_id' => env('GOOGLE_TTS_EFFECTS_PROFILE_ID'),
+            'allowed_voices' => $googleAllowedVoices,
+            'allowed_languages' => $googleAllowedLanguages,
+            'allowed_audio_formats' => $googleAllowedAudioFormats,
             'pricing' => [
                 'currency' => env('GOOGLE_TTS_PRICING_CURRENCY', 'USD'),
                 'cost_per_million_micros' => $costPerMillionMicros,
@@ -90,6 +113,9 @@ return [
             'speaking_rate' => (float) env('AZURE_TTS_SPEAKING_RATE', 1.0),
             'pitch' => (float) env('AZURE_TTS_PITCH', 0.0),
             'audio_format' => env('AZURE_TTS_AUDIO_FORMAT', 'mp3'),
+            'allowed_voices' => $azureAllowedVoices,
+            'allowed_languages' => $azureAllowedLanguages,
+            'allowed_audio_formats' => $azureAllowedAudioFormats,
             'timeout_seconds' => (float) env('AZURE_TTS_TIMEOUT_SECONDS', 10),
             'connect_timeout_seconds' => (float) env('AZURE_TTS_CONNECT_TIMEOUT_SECONDS', 5),
             'retry_times' => (int) env('AZURE_TTS_RETRY_TIMES', 2),

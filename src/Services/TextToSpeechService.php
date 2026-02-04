@@ -3,6 +3,7 @@
 namespace Lalalili\TextToSpeech\Services;
 
 use Illuminate\Support\Facades\Storage;
+use InvalidArgumentException;
 use Lalalili\TextToSpeech\Contracts\CharacterCounterInterface;
 use Lalalili\TextToSpeech\Contracts\TextToSpeechServiceInterface;
 use Lalalili\TextToSpeech\Jobs\GenerateTextToSpeechAudioJob;
@@ -24,6 +25,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
     {
         $options = $this->normalizeOptions($options);
         $driver = $this->resolveDriver($options);
+        $this->validateOptions($options, $driver);
 
         $hash = $this->hasher->make($input, $options, $driver);
         $characterCount = $this->characterCounter->count($input, $options->inputType);
@@ -53,6 +55,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
     {
         $options = $this->normalizeOptions($options);
         $driver = $this->resolveDriver($options);
+        $this->validateOptions($options, $driver);
 
         $hash = $this->hasher->make($input, $options, $driver);
         $characterCount = $this->characterCounter->count($input, $options->inputType);
@@ -115,6 +118,45 @@ class TextToSpeechService implements TextToSpeechServiceInterface
         $options->driver = $driver;
 
         return $driver;
+    }
+
+    private function validateOptions(TextToSpeechOptions $options, string $driver): void
+    {
+        if (! in_array($options->inputType, ['text', 'ssml'], true)) {
+            throw new InvalidArgumentException('Unsupported input type.');
+        }
+
+        if ($options->inputType === 'ssml' && ! config('text-to-speech.security.allow_ssml', false)) {
+            throw new InvalidArgumentException('SSML input is not allowed.');
+        }
+
+        $this->assertAllowed('voice', $options->voice, $driver);
+        $this->assertAllowed('language', $options->languageCode, $driver);
+        $this->assertAllowed('audio_format', $options->audioFormat, $driver);
+    }
+
+    private function assertAllowed(string $key, string $value, string $driver): void
+    {
+        $configKey = match ($key) {
+            'voice' => 'allowed_voices',
+            'language' => 'allowed_languages',
+            'audio_format' => 'allowed_audio_formats',
+            default => null,
+        };
+
+        if ($configKey === null) {
+            return;
+        }
+
+        $allowed = config("text-to-speech.drivers.{$driver}.{$configKey}", []);
+
+        if (! is_array($allowed) || $allowed === []) {
+            return;
+        }
+
+        if (! in_array($value, $allowed, true)) {
+            throw new InvalidArgumentException(sprintf('Unsupported %s.', $key));
+        }
     }
 
     private function isReusable(TextToSpeechRequest $request): bool
