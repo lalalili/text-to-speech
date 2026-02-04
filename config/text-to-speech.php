@@ -82,6 +82,8 @@ return [
 
     'security' => [
         'allow_ssml' => env('TTS_ALLOW_SSML', false),
+        'ssml_allowed_tags' => env('TTS_SSML_ALLOWED_TAGS', 'speak,voice,prosody,break,emphasis,sub,lang'),
+        'ssml_disallowed_tags' => env('TTS_SSML_DISALLOWED_TAGS', 'audio,lexicon,mark,metadata,desc'),
     ],
 
     'drivers' => [

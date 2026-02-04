@@ -16,6 +16,7 @@ final class TextToSpeechOptions
         public ?int $sampleRateHertz = null,
         public ?string $effectsProfileId = null,
         public ?string $driver = null,
+        public ?string $rawInput = null,
     ) {
         $this->audioFormat = strtolower($this->audioFormat);
     }
@@ -35,6 +36,7 @@ final class TextToSpeechOptions
             sampleRateHertz: $config['sample_rate_hertz'] ?? null,
             effectsProfileId: $config['effects_profile_id'] ?? null,
             driver: $driver,
+            rawInput: null,
         );
     }
 
@@ -57,6 +59,7 @@ final class TextToSpeechOptions
             sampleRateHertz: isset($data['sample_rate_hertz']) ? (int) $data['sample_rate_hertz'] : null,
             effectsProfileId: isset($data['effects_profile_id']) ? (string) $data['effects_profile_id'] : null,
             driver: isset($data['driver']) ? (string) $data['driver'] : null,
+            rawInput: isset($data['raw_input']) ? (string) $data['raw_input'] : null,
         );
     }
 
@@ -75,6 +78,7 @@ final class TextToSpeechOptions
             'sample_rate_hertz' => $this->sampleRateHertz,
             'effects_profile_id' => $this->effectsProfileId,
             'driver' => $this->driver,
+            'raw_input' => $this->rawInput,
         ];
     }
 
