@@ -32,6 +32,7 @@ class TextToSpeechRequest extends Model
             'character_count' => 'integer',
             'estimated_cost_micros' => 'integer',
             'limit_exceeded' => 'boolean',
+            'retry_count' => 'integer',
             'meta' => 'array',
         ];
     }

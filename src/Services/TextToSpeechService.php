@@ -153,11 +153,13 @@ class TextToSpeechService implements TextToSpeechServiceInterface
         $request->character_count = $characterCount;
         $request->estimated_cost_micros = $this->estimateCostMicros($driver, $characterCount);
         $request->limit_exceeded = $this->isLimitExceeded($characterCount);
+        $request->retry_count = 0;
         $request->status = TextToSpeechRequest::STATUS_PENDING;
         $request->disk = (string) config('text-to-speech.storage.disk');
         $request->path = $this->buildPath($hash, $options->fileExtension());
         $request->url = null;
         $request->error_message = null;
+        $request->last_error_code = null;
         $request->meta = array_merge((array) $request->meta, [
             'options' => $options->toArray(),
         ]);

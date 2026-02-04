@@ -23,6 +23,8 @@ class TextToSpeechDailyMetric extends Model
             'requests_count' => 'integer',
             'success_count' => 'integer',
             'failed_count' => 'integer',
+            'retry_requests_count' => 'integer',
+            'retry_count_sum' => 'integer',
             'character_count_sum' => 'integer',
             'estimated_cost_micros_sum' => 'integer',
         ];
