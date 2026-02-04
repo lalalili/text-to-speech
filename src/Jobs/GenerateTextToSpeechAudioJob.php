@@ -24,13 +24,29 @@ class GenerateTextToSpeechAudioJob implements ShouldQueue
     use SerializesModels;
 
     /**
+     * @var int|array<int, int>|null
+     */
+    public int|array|null $backoff = null;
+
+    public ?int $tries = null;
+
+    /**
      * @param  array<string, mixed>  $options
      */
     public function __construct(
         public int $requestId,
         public string $input,
         public array $options,
-    ) {}
+    ) {
+        $retryTimes = (int) config('text-to-speech.queue.retry_times', 3);
+        $this->tries = $retryTimes > 0 ? $retryTimes : null;
+
+        $backoff = config('text-to-speech.queue.retry_backoff_seconds', []);
+
+        if (is_array($backoff) && $backoff !== []) {
+            $this->backoff = array_values(array_filter(array_map('intval', $backoff)));
+        }
+    }
 
     public function handle(TextToSpeechService $service): void
     {

@@ -16,6 +16,11 @@ $azureRetryStatuses = is_string($azureRetryStatuses)
     ? array_values(array_filter(array_map('intval', array_map('trim', explode(',', $azureRetryStatuses)))))
     : [];
 
+$ttsQueueBackoff = env('TTS_QUEUE_RETRY_BACKOFF_SECONDS', '30,120,300');
+$ttsQueueBackoff = is_string($ttsQueueBackoff)
+    ? array_values(array_filter(array_map('intval', array_map('trim', explode(',', $ttsQueueBackoff)))))
+    : [];
+
 return [
     'default' => env('TTS_DRIVER', 'google'),
 
@@ -23,6 +28,8 @@ return [
         'connection' => env('TTS_QUEUE_CONNECTION'),
         'name' => env('TTS_QUEUE_NAME', 'tts'),
         'lock_ttl_seconds' => env('TTS_QUEUE_LOCK_TTL_SECONDS', 600),
+        'retry_times' => (int) env('TTS_QUEUE_RETRY_TIMES', 3),
+        'retry_backoff_seconds' => $ttsQueueBackoff,
     ],
 
     'storage' => [

@@ -91,6 +91,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
             $request->url = $this->resolveUrl($request->disk, $request->path);
             $request->status = TextToSpeechRequest::STATUS_READY;
             $request->error_message = null;
+            $request->last_error_code = null;
             $request->save();
 
             return $request;
