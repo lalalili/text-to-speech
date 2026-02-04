@@ -3,6 +3,7 @@
 namespace Lalalili\TextToSpeech\Drivers;
 
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Lalalili\TextToSpeech\Contracts\TextToSpeechDriverInterface;
 use Lalalili\TextToSpeech\Support\TextToSpeechOptions;
@@ -26,6 +27,8 @@ class AzureTextToSpeechDriver implements TextToSpeechDriverInterface
             'X-Microsoft-OutputFormat' => $this->resolveOutputFormat($options),
             'User-Agent' => $this->resolveUserAgent(),
         ])->withBody($ssml, 'application/ssml+xml')->post($endpoint);
+
+        $this->logResponseSummary($response, $endpoint);
 
         if (! $response->successful()) {
             $this->throwRequestException($response);
@@ -183,5 +186,20 @@ class AzureTextToSpeechDriver implements TextToSpeechDriverInterface
         }
 
         throw new RuntimeException($message);
+    }
+
+    private function logResponseSummary(Response $response, string $endpoint): void
+    {
+        $contentLength = $response->header('Content-Length');
+        $length = strlen((string) $response->body());
+
+        Log::info('Azure TTS response', [
+            'endpoint' => $endpoint,
+            'status' => $response->status(),
+            'content_length' => $contentLength,
+            'body_length' => $length,
+            'content_type' => $response->header('Content-Type'),
+            'x_request_id' => $response->header('x-requestid'),
+        ]);
     }
 }
