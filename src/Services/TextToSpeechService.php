@@ -42,6 +42,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
             $driver,
             $options,
             $characterCount,
+            $input,
         );
 
         $request->save();
@@ -72,6 +73,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
             $driver,
             $options,
             $characterCount,
+            $input,
         );
 
         $request->save();
@@ -192,6 +194,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
         string $driver,
         TextToSpeechOptions $options,
         int $characterCount,
+        string $input,
     ): TextToSpeechRequest {
         $request->hash = $hash;
         $request->driver = $driver;
@@ -216,6 +219,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
         $request->cache_hit = false;
         $request->meta = array_merge((array) $request->meta, [
             'options' => $options->toArray(),
+            'input' => $input,
         ]);
 
         return $request;
