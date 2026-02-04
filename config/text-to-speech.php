@@ -50,6 +50,14 @@ return [
         'azure' => [
             'key' => env('AZURE_TTS_KEY'),
             'region' => env('AZURE_TTS_REGION'),
+            'endpoint' => env('AZURE_TTS_ENDPOINT'),
+            'user_agent' => env('AZURE_TTS_USER_AGENT', 'text-to-speech'),
+            'output_format' => env('AZURE_TTS_OUTPUT_FORMAT'),
+            'language_code' => env('AZURE_TTS_LANGUAGE_CODE'),
+            'voice' => env('AZURE_TTS_VOICE'),
+            'speaking_rate' => (float) env('AZURE_TTS_SPEAKING_RATE', 1.0),
+            'pitch' => (float) env('AZURE_TTS_PITCH', 0.0),
+            'audio_format' => env('AZURE_TTS_AUDIO_FORMAT', 'mp3'),
         ],
     ],
 ];
