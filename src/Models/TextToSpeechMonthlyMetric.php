@@ -25,6 +25,7 @@ class TextToSpeechMonthlyMetric extends Model
             'failed_count' => 'integer',
             'retry_requests_count' => 'integer',
             'retry_count_sum' => 'integer',
+            'cache_hit_count' => 'integer',
             'character_count_sum' => 'integer',
             'estimated_cost_micros_sum' => 'integer',
         ];

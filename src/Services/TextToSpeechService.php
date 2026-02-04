@@ -31,7 +31,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
         $existing = TextToSpeechRequest::query()->where('hash', $hash)->first();
 
         if ($existing && $this->isReusable($existing)) {
-            return $this->ensureUrl($existing);
+            return $this->markCacheHit($this->ensureUrl($existing));
         }
 
         $request = $this->fillRequest(
@@ -60,7 +60,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
         $existing = TextToSpeechRequest::query()->where('hash', $hash)->first();
 
         if ($existing && $this->isReusable($existing)) {
-            return $this->ensureUrl($existing);
+            return $this->markCacheHit($this->ensureUrl($existing));
         }
 
         $request = $this->fillRequest(
@@ -126,6 +126,16 @@ class TextToSpeechService implements TextToSpeechServiceInterface
         return Storage::disk($request->disk)->exists($request->path);
     }
 
+    private function markCacheHit(TextToSpeechRequest $request): TextToSpeechRequest
+    {
+        if (! $request->cache_hit) {
+            $request->cache_hit = true;
+            $request->save();
+        }
+
+        return $request;
+    }
+
     private function ensureUrl(TextToSpeechRequest $request): TextToSpeechRequest
     {
         $request->url = $this->resolveUrl($request->disk, $request->path);
@@ -161,6 +171,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
         $request->url = null;
         $request->error_message = null;
         $request->last_error_code = null;
+        $request->cache_hit = false;
         $request->meta = array_merge((array) $request->meta, [
             'options' => $options->toArray(),
         ]);

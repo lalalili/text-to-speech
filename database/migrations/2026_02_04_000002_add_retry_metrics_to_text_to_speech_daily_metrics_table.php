@@ -11,13 +11,14 @@ return new class extends Migration
         Schema::table('text_to_speech_daily_metrics', function (Blueprint $table): void {
             $table->unsignedInteger('retry_requests_count')->default(0)->after('failed_count');
             $table->unsignedBigInteger('retry_count_sum')->default(0)->after('failed_count');
+            $table->unsignedInteger('cache_hit_count')->default(0)->after('retry_count_sum');
         });
     }
 
     public function down(): void
     {
         Schema::table('text_to_speech_daily_metrics', function (Blueprint $table): void {
-            $table->dropColumn(['retry_requests_count', 'retry_count_sum']);
+            $table->dropColumn(['retry_requests_count', 'retry_count_sum', 'cache_hit_count']);
         });
     }
 };

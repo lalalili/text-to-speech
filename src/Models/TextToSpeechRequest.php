@@ -33,6 +33,7 @@ class TextToSpeechRequest extends Model
             'estimated_cost_micros' => 'integer',
             'limit_exceeded' => 'boolean',
             'retry_count' => 'integer',
+            'cache_hit' => 'boolean',
             'meta' => 'array',
         ];
     }

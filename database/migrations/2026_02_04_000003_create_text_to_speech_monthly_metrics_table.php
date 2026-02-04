@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedInteger('failed_count')->default(0);
             $table->unsignedInteger('retry_requests_count')->default(0);
             $table->unsignedBigInteger('retry_count_sum')->default(0);
+            $table->unsignedInteger('cache_hit_count')->default(0);
             $table->unsignedBigInteger('character_count_sum')->default(0);
             $table->unsignedBigInteger('estimated_cost_micros_sum')->default(0);
             $table->timestamps();
