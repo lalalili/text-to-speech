@@ -47,6 +47,13 @@ return [
     'metrics' => [
         'daily_time' => env('TTS_DAILY_METRICS_TIME', '01:15'),
         'timezone' => env('TTS_DAILY_METRICS_TIMEZONE'),
+        'monthly_time' => env('TTS_MONTHLY_METRICS_TIME', '01:30'),
+        'monthly_timezone' => env('TTS_MONTHLY_METRICS_TIMEZONE'),
+        'alerts' => [
+            'channel' => env('TTS_ALERT_CHANNEL', 'slack'),
+            'monthly_cost_micros' => env('TTS_ALERT_MONTHLY_COST_MICROS'),
+            'monthly_characters' => env('TTS_ALERT_MONTHLY_CHARACTERS'),
+        ],
     ],
 
     'drivers' => [
