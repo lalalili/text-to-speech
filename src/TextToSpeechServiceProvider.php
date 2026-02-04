@@ -18,7 +18,13 @@ class TextToSpeechServiceProvider extends ServiceProvider
         $this->app->singleton(TextToSpeechManager::class);
         $this->app->singleton(TextToSpeechHasher::class);
         $this->app->bind(CharacterCounterInterface::class, DefaultCharacterCounter::class);
-        $this->app->singleton(TextToSpeechServiceInterface::class, TextToSpeechService::class);
+        $this->app->singleton(TextToSpeechServiceInterface::class, function ($app): TextToSpeechService {
+            return new TextToSpeechService(
+                $app->make(TextToSpeechManager::class),
+                $app->make(CharacterCounterInterface::class),
+                $app->make(TextToSpeechHasher::class),
+            );
+        });
         $this->app->alias(TextToSpeechServiceInterface::class, TextToSpeechService::class);
     }
 
