@@ -37,6 +37,11 @@ return [
         'max_characters' => $maxCharacters,
     ],
 
+    'metrics' => [
+        'daily_time' => env('TTS_DAILY_METRICS_TIME', '01:15'),
+        'timezone' => env('TTS_DAILY_METRICS_TIMEZONE'),
+    ],
+
     'drivers' => [
         'google' => [
             'credentials' => env('GOOGLE_TTS_CREDENTIALS'),
