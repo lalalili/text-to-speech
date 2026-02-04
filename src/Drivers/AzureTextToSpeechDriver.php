@@ -5,9 +5,13 @@ namespace Lalalili\TextToSpeech\Drivers;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\RequestException;
 use Lalalili\TextToSpeech\Contracts\TextToSpeechDriverInterface;
 use Lalalili\TextToSpeech\Support\TextToSpeechOptions;
 use RuntimeException;
+use Throwable;
 
 class AzureTextToSpeechDriver implements TextToSpeechDriverInterface
 {
@@ -22,11 +26,13 @@ class AzureTextToSpeechDriver implements TextToSpeechDriverInterface
             ? $input
             : $this->buildSsml($input, $voice, $languageCode, $options);
 
-        $response = Http::withHeaders([
+        $request = Http::withHeaders([
             'Ocp-Apim-Subscription-Key' => $key,
             'X-Microsoft-OutputFormat' => $this->resolveOutputFormat($options),
             'User-Agent' => $this->resolveUserAgent(),
-        ])->withBody($ssml, 'application/ssml+xml')->post($endpoint);
+        ])->withBody($ssml, 'application/ssml+xml');
+
+        $response = $this->applyHttpOptions($request)->post($endpoint);
 
         $this->logResponseSummary($response, $endpoint);
 
@@ -92,6 +98,57 @@ class AzureTextToSpeechDriver implements TextToSpeechDriverInterface
         }
 
         return 'text-to-speech';
+    }
+
+    private function applyHttpOptions(PendingRequest $request): PendingRequest
+    {
+        $timeout = config('text-to-speech.drivers.azure.timeout_seconds');
+
+        if (is_numeric($timeout)) {
+            $request->timeout((float) $timeout);
+        }
+
+        $connectTimeout = config('text-to-speech.drivers.azure.connect_timeout_seconds');
+
+        if (is_numeric($connectTimeout)) {
+            $request->connectTimeout((float) $connectTimeout);
+        }
+
+        $retryTimes = (int) config('text-to-speech.drivers.azure.retry_times', 0);
+
+        if ($retryTimes > 0) {
+            $sleepMilliseconds = (int) config('text-to-speech.drivers.azure.retry_sleep_ms', 0);
+            $retryStatuses = $this->resolveRetryStatuses();
+
+            $request->retry(
+                $retryTimes,
+                $sleepMilliseconds,
+                function (Throwable $exception, PendingRequest $request, ?string $method) use ($retryStatuses): bool {
+                    if ($exception instanceof RequestException) {
+                        return in_array($exception->response->status(), $retryStatuses, true);
+                    }
+
+                    return $exception instanceof ConnectionException;
+                },
+                false,
+            );
+        }
+
+        return $request;
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    private function resolveRetryStatuses(): array
+    {
+        $statuses = config('text-to-speech.drivers.azure.retry_on_statuses', []);
+
+        if (! is_array($statuses)) {
+            return [];
+        }
+
+        return array_values(array_unique(array_filter(array_map('intval', $statuses))));
     }
 
     private function resolveOutputFormat(TextToSpeechOptions $options): string

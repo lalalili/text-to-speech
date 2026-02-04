@@ -11,6 +11,11 @@ $sampleRateHertz = $sampleRateHertz !== null ? (int) $sampleRateHertz : null;
 $costPerMillionMicros = env('GOOGLE_TTS_COST_PER_MILLION_MICROS');
 $costPerMillionMicros = $costPerMillionMicros !== null ? (int) $costPerMillionMicros : null;
 
+$azureRetryStatuses = env('AZURE_TTS_RETRY_ON_STATUSES', '429,500,502,503,504');
+$azureRetryStatuses = is_string($azureRetryStatuses)
+    ? array_values(array_filter(array_map('intval', array_map('trim', explode(',', $azureRetryStatuses)))))
+    : [];
+
 return [
     'default' => env('TTS_DRIVER', 'google'),
 
@@ -58,6 +63,11 @@ return [
             'speaking_rate' => (float) env('AZURE_TTS_SPEAKING_RATE', 1.0),
             'pitch' => (float) env('AZURE_TTS_PITCH', 0.0),
             'audio_format' => env('AZURE_TTS_AUDIO_FORMAT', 'mp3'),
+            'timeout_seconds' => (float) env('AZURE_TTS_TIMEOUT_SECONDS', 10),
+            'connect_timeout_seconds' => (float) env('AZURE_TTS_CONNECT_TIMEOUT_SECONDS', 5),
+            'retry_times' => (int) env('AZURE_TTS_RETRY_TIMES', 2),
+            'retry_sleep_ms' => (int) env('AZURE_TTS_RETRY_SLEEP_MS', 200),
+            'retry_on_statuses' => $azureRetryStatuses,
         ],
     ],
 ];
