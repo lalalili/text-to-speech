@@ -226,62 +226,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
 
         preg_match_all('/<\\s*\\/?\\s*([a-zA-Z0-9:_-]+)/', $input, $matches);
 
-        $tags = array_map(static fn (string $tag): string => strtolower($tag), $matches[1] ?? []);
-
-        return array_values(array_unique($tags));
-    }
-
-    private function validateSsml(TextToSpeechOptions $options): void
-    {
-        $allowed = $this->parseTagList(config('text-to-speech.security.ssml_allowed_tags', ''));
-        $disallowed = $this->parseTagList(config('text-to-speech.security.ssml_disallowed_tags', ''));
-
-        if ($allowed === [] && $disallowed === []) {
-            return;
-        }
-
-        $tags = $this->extractTags($options->rawInput);
-
-        foreach ($tags as $tag) {
-            if (in_array($tag, $disallowed, true)) {
-                throw new InvalidArgumentException(sprintf('SSML tag "%s" is not allowed.', $tag));
-            }
-
-            if ($allowed !== [] && ! in_array($tag, $allowed, true)) {
-                throw new InvalidArgumentException(sprintf('SSML tag "%s" is not allowed.', $tag));
-            }
-        }
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    private function parseTagList(string $value): array
-    {
-        if (trim($value) === '') {
-            return [];
-        }
-
-        $tags = array_map('trim', explode(',', $value));
-
-        return array_values(array_filter($tags, fn (string $tag): bool => $tag !== ''));
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    /**
-     * @return array<int, string>
-     */
-    private function extractTags(string $input): array
-    {
-        if ($input === '') {
-            return [];
-        }
-
-        preg_match_all('/<\\s*\\/?\\s*([a-zA-Z0-9:_-]+)/', $input, $matches);
-
-        $tags = array_map(static fn (string $tag): string => strtolower($tag), $matches[1] ?? []);
+        $tags = array_map(static fn (string $tag): string => strtolower($tag), $matches[1]);
 
         return array_values(array_unique($tags));
     }

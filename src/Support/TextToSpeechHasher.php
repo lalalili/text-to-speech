@@ -19,6 +19,12 @@ final class TextToSpeechHasher
             'effects_profile_id' => $options->effectsProfileId,
         ];
 
-        return hash('sha256', json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        $encoded = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        if ($encoded === false) {
+            $encoded = '';
+        }
+
+        return hash('sha256', $encoded);
     }
 }
