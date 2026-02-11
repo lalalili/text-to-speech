@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('text_to_speech_requests')) {
+            return;
+        }
+
         Schema::create('text_to_speech_requests', function (Blueprint $table): void {
             $table->id();
             $table->string('hash', 64)->unique();
@@ -35,6 +39,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasTable('text_to_speech_requests')) {
+            return;
+        }
+
         Schema::dropIfExists('text_to_speech_requests');
     }
 };

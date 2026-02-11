@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('text_to_speech_monthly_metrics')) {
+            return;
+        }
+
         Schema::create('text_to_speech_monthly_metrics', function (Blueprint $table) {
             $table->id();
             $table->date('month');
@@ -28,6 +32,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasTable('text_to_speech_monthly_metrics')) {
+            return;
+        }
+
         Schema::dropIfExists('text_to_speech_monthly_metrics');
     }
 };

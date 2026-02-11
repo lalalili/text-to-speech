@@ -8,10 +8,21 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('text_to_speech_requests', function (Blueprint $table): void {
-            $table->unsignedInteger('retry_count')->default(0)->after('limit_exceeded');
-            $table->string('last_error_code', 20)->nullable()->after('error_message');
-        });
+        if (! Schema::hasTable('text_to_speech_requests')) {
+            return;
+        }
+
+        if (! Schema::hasColumn('text_to_speech_requests', 'retry_count')) {
+            Schema::table('text_to_speech_requests', function (Blueprint $table): void {
+                $table->unsignedInteger('retry_count')->default(0)->after('limit_exceeded');
+            });
+        }
+
+        if (! Schema::hasColumn('text_to_speech_requests', 'last_error_code')) {
+            Schema::table('text_to_speech_requests', function (Blueprint $table): void {
+                $table->string('last_error_code', 20)->nullable()->after('error_message');
+            });
+        }
 
         if (! Schema::hasColumn('text_to_speech_requests', 'cache_hit')) {
             Schema::table('text_to_speech_requests', function (Blueprint $table): void {
@@ -22,8 +33,19 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasTable('text_to_speech_requests')) {
+            return;
+        }
+
         Schema::table('text_to_speech_requests', function (Blueprint $table): void {
-            $table->dropColumn(['retry_count', 'last_error_code', 'cache_hit']);
+            $columns = collect(['retry_count', 'last_error_code', 'cache_hit'])
+                ->filter(fn (string $column): bool => Schema::hasColumn('text_to_speech_requests', $column))
+                ->values()
+                ->all();
+
+            if ($columns !== []) {
+                $table->dropColumn($columns);
+            }
         });
     }
 };
