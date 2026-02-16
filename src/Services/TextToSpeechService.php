@@ -19,7 +19,8 @@ class TextToSpeechService implements TextToSpeechServiceInterface
         private readonly TextToSpeechManager $manager,
         private readonly CharacterCounterInterface $characterCounter,
         private readonly TextToSpeechHasher $hasher,
-    ) {}
+    ) {
+    }
 
     public function queue(string $input, ?TextToSpeechOptions $options = null): TextToSpeechRequest
     {
@@ -38,7 +39,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
         }
 
         $request = $this->fillRequest(
-            $existing ?? new TextToSpeechRequest,
+            $existing ?? new TextToSpeechRequest(),
             $hash,
             $driver,
             $options,
@@ -70,7 +71,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
         }
 
         $request = $this->fillRequest(
-            $existing ?? new TextToSpeechRequest,
+            $existing ?? new TextToSpeechRequest(),
             $hash,
             $driver,
             $options,
@@ -158,10 +159,10 @@ class TextToSpeechService implements TextToSpeechServiceInterface
     private function assertAllowed(string $key, string $value, string $driver): void
     {
         $configKey = match ($key) {
-            'voice' => 'allowed_voices',
-            'language' => 'allowed_languages',
+            'voice'        => 'allowed_voices',
+            'language'     => 'allowed_languages',
             'audio_format' => 'allowed_audio_formats',
-            default => null,
+            default        => null,
         };
 
         if ($configKey === null) {
@@ -289,7 +290,7 @@ class TextToSpeechService implements TextToSpeechServiceInterface
         $request->cache_hit = false;
         $request->meta = array_merge((array) $request->meta, [
             'options' => $options->toArray(),
-            'input' => $input,
+            'input'   => $input,
         ]);
 
         return $request;

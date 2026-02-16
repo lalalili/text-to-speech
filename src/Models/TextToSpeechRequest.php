@@ -54,14 +54,14 @@ class TextToSpeechRequest extends Model
     protected function casts(): array
     {
         return [
-            'speaking_rate' => 'float',
-            'pitch' => 'float',
-            'character_count' => 'integer',
+            'speaking_rate'         => 'float',
+            'pitch'                 => 'float',
+            'character_count'       => 'integer',
             'estimated_cost_micros' => 'integer',
-            'limit_exceeded' => 'boolean',
-            'retry_count' => 'integer',
-            'cache_hit' => 'boolean',
-            'meta' => 'array',
+            'limit_exceeded'        => 'boolean',
+            'retry_count'           => 'integer',
+            'cache_hit'             => 'boolean',
+            'meta'                  => 'array',
         ];
     }
 }

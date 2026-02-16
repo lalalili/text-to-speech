@@ -69,26 +69,26 @@ final class TextToSpeechOptions
     public function toArray(): array
     {
         return [
-            'input_type' => $this->inputType,
-            'voice' => $this->voice,
-            'language_code' => $this->languageCode,
-            'speaking_rate' => $this->speakingRate,
-            'pitch' => $this->pitch,
-            'audio_format' => $this->audioFormat,
-            'sample_rate_hertz' => $this->sampleRateHertz,
+            'input_type'         => $this->inputType,
+            'voice'              => $this->voice,
+            'language_code'      => $this->languageCode,
+            'speaking_rate'      => $this->speakingRate,
+            'pitch'              => $this->pitch,
+            'audio_format'       => $this->audioFormat,
+            'sample_rate_hertz'  => $this->sampleRateHertz,
             'effects_profile_id' => $this->effectsProfileId,
-            'driver' => $this->driver,
-            'raw_input' => $this->rawInput,
+            'driver'             => $this->driver,
+            'raw_input'          => $this->rawInput,
         ];
     }
 
     public function fileExtension(): string
     {
         return match ($this->audioFormat) {
-            'mp3' => 'mp3',
+            'mp3'      => 'mp3',
             'ogg_opus' => 'ogg',
             'linear16' => 'wav',
-            default => $this->audioFormat,
+            default    => $this->audioFormat,
         };
     }
 }
