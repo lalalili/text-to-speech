@@ -23,6 +23,7 @@
   },
   "require-dev": {
     "laravel/pint": "^1.14",
+    "larastan/larastan": "^3.0",
     "orchestra/testbench": "^11.0|^10.0",
     "pestphp/pest": "^4.0",
     "pestphp/pest-plugin-laravel": "^4.0",
@@ -51,6 +52,7 @@
   "config": {
     "sort-packages": true,
     "allow-plugins": {
+      "phpstan/extension-installer": true,
       "pestphp/pest-plugin": true
     }
   },
@@ -59,6 +61,7 @@
   "scripts": {
     "test": "vendor/bin/pest",
     "format": "vendor/bin/pint",
-    "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon"
+    "analyse": "vendor/bin/phpstan analyse --configuration=phpstan.neon --no-progress",
+    "phpstan": "vendor/bin/phpstan analyse --configuration=phpstan.neon --no-progress"
   }
 }

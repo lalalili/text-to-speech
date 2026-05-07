@@ -19,7 +19,7 @@ class GoogleCloudTextToSpeechDriver implements TextToSpeechDriverInterface
         $client = new TextToSpeechClient($this->clientOptions());
 
         try {
-            $synthesisInput = new SynthesisInput();
+            $synthesisInput = new SynthesisInput;
 
             if ($options->inputType === 'ssml') {
                 $synthesisInput->setSsml($input);
@@ -27,11 +27,11 @@ class GoogleCloudTextToSpeechDriver implements TextToSpeechDriverInterface
                 $synthesisInput->setText($input);
             }
 
-            $voice = (new VoiceSelectionParams())
+            $voice = (new VoiceSelectionParams)
                 ->setLanguageCode($options->languageCode)
                 ->setName($options->voice);
 
-            $audioConfig = (new AudioConfig())
+            $audioConfig = (new AudioConfig)
                 ->setAudioEncoding($this->resolveAudioEncoding($options->audioFormat))
                 ->setSpeakingRate($options->speakingRate)
                 ->setPitch($options->pitch);
@@ -76,10 +76,10 @@ class GoogleCloudTextToSpeechDriver implements TextToSpeechDriverInterface
     private function resolveAudioEncoding(string $audioFormat): int
     {
         return match ($audioFormat) {
-            'mp3'      => AudioEncoding::MP3,
+            'mp3' => AudioEncoding::MP3,
             'ogg_opus' => AudioEncoding::OGG_OPUS,
             'linear16' => AudioEncoding::LINEAR16,
-            default    => AudioEncoding::MP3,
+            default => AudioEncoding::MP3,
         };
     }
 
