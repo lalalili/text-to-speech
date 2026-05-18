@@ -22,6 +22,13 @@ class GeminiTextToSpeechDriver implements TextToSpeechDriverInterface
             throw new InvalidArgumentException('Gemini TTS does not support SSML input.');
         }
 
+        if ($options->speakingRate !== 1.0 || $options->pitch !== 0.0) {
+            Log::warning('Gemini TTS does not support speakingRate or pitch; these parameters are ignored.', [
+                'speaking_rate' => $options->speakingRate,
+                'pitch' => $options->pitch,
+            ]);
+        }
+
         $endpoint = $this->resolveEndpoint();
         $apiKey = $this->resolveApiKey();
         $voice = $this->resolveVoice($options);

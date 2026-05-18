@@ -37,11 +37,17 @@ it('reuses cached audio when file exists', function () {
     expect($cached->id)->toBe($request->id);
 });
 
-it('counts ssml characters including tags', function () {
+it('strips ssml tags when counting characters', function () {
     $counter = new DefaultCharacterCounter;
     $ssml = '<speak>你好</speak>';
 
-    expect($counter->count($ssml, 'ssml'))->toBe(mb_strlen($ssml, 'UTF-8'));
+    expect($counter->count($ssml, 'ssml'))->toBe(mb_strlen('你好', 'UTF-8'));
+});
+
+it('counts plain text characters without stripping', function () {
+    $counter = new DefaultCharacterCounter;
+
+    expect($counter->count('你好世界', 'text'))->toBe(4);
 });
 
 it('throws for azure driver stub', function () {

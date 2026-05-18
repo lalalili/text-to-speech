@@ -8,6 +8,8 @@ class TextToSpeechDailyMetric extends Model
 {
     protected $table = 'text_to_speech_daily_metrics';
 
+    protected $dateFormat = 'Y-m-d';
+
     /**
      * @var array<int, string>
      */

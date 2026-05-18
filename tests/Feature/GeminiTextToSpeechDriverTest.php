@@ -166,6 +166,52 @@ it('throws RuntimeException when api key is not configured', function () {
     $driver->synthesize('hello', $options);
 })->throws(RuntimeException::class, 'GEMINI_TTS_API_KEY');
 
+it('logs warning when speakingRate is not default', function () {
+    Http::fake(['*' => Http::response(fakePcmResponse())]);
+    geminiConfig(['audio_format' => 'linear16']);
+
+    \Illuminate\Support\Facades\Log::spy();
+
+    $driver = new GeminiTextToSpeechDriver;
+    $options = new TextToSpeechOptions(
+        inputType: 'text',
+        voice: 'Kore',
+        languageCode: 'cmn-TW',
+        speakingRate: 1.5,
+        pitch: 0.0,
+        audioFormat: 'linear16',
+    );
+
+    $driver->synthesize('你好', $options);
+
+    \Illuminate\Support\Facades\Log::shouldHaveReceived('warning')
+        ->once()
+        ->withArgs(fn (string $msg) => str_contains($msg, 'speakingRate'));
+});
+
+it('logs warning when pitch is not default', function () {
+    Http::fake(['*' => Http::response(fakePcmResponse())]);
+    geminiConfig(['audio_format' => 'linear16']);
+
+    \Illuminate\Support\Facades\Log::spy();
+
+    $driver = new GeminiTextToSpeechDriver;
+    $options = new TextToSpeechOptions(
+        inputType: 'text',
+        voice: 'Kore',
+        languageCode: 'cmn-TW',
+        speakingRate: 1.0,
+        pitch: 2.0,
+        audioFormat: 'linear16',
+    );
+
+    $driver->synthesize('你好', $options);
+
+    \Illuminate\Support\Facades\Log::shouldHaveReceived('warning')
+        ->once()
+        ->withArgs(fn (string $msg) => str_contains($msg, 'speakingRate'));
+});
+
 it('parses sample rate from mimeType into WAV header', function () {
     Http::fake(['*' => Http::response(fakePcmResponse(22050))]);
     geminiConfig(['audio_format' => 'linear16']);

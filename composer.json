@@ -15,9 +15,11 @@
     "google/cloud-text-to-speech": "^1.0",
     "illuminate/bus": "^13.0|^12.0|^11.0",
     "illuminate/cache": "^13.0|^12.0|^11.0",
+    "illuminate/console": "^13.0|^12.0|^11.0",
     "illuminate/contracts": "^13.0|^12.0|^11.0",
     "illuminate/database": "^13.0|^12.0|^11.0",
     "illuminate/filesystem": "^13.0|^12.0|^11.0",
+    "illuminate/http": "^13.0|^12.0|^11.0",
     "illuminate/queue": "^13.0|^12.0|^11.0",
     "illuminate/support": "^13.0|^12.0|^11.0"
   },

@@ -2,7 +2,14 @@
 
 namespace Lalalili\TextToSpeech;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
+use Lalalili\TextToSpeech\Console\AggregateDailyMetricsCommand;
+use Lalalili\TextToSpeech\Console\AggregateMonthlyMetricsCommand;
+use Lalalili\TextToSpeech\Console\CleanupCommand;
+use Lalalili\TextToSpeech\Console\RetryCommand;
+use Lalalili\TextToSpeech\Console\StatsCommand;
+use Lalalili\TextToSpeech\Console\SynthesizeCommand;
 use Lalalili\TextToSpeech\Contracts\CharacterCounterInterface;
 use Lalalili\TextToSpeech\Contracts\TextToSpeechServiceInterface;
 use Lalalili\TextToSpeech\Services\TextToSpeechService;
@@ -39,5 +46,36 @@ class TextToSpeechServiceProvider extends ServiceProvider
         ], 'text-to-speech-migrations');
 
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                SynthesizeCommand::class,
+                RetryCommand::class,
+                CleanupCommand::class,
+                AggregateDailyMetricsCommand::class,
+                AggregateMonthlyMetricsCommand::class,
+                StatsCommand::class,
+            ]);
+
+            $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+                $dailyTime = (string) config('text-to-speech.metrics.daily_time', '01:15');
+                $dailyTz = config('text-to-speech.metrics.timezone');
+                $monthlyTime = (string) config('text-to-speech.metrics.monthly_time', '01:30');
+                $monthlyTz = config('text-to-speech.metrics.monthly_timezone');
+                $cleanupTime = (string) config('text-to-speech.cleanup.time', '02:40');
+
+                $daily = $schedule->command('tts:aggregate-daily')->dailyAt($dailyTime);
+                if (is_string($dailyTz) && $dailyTz !== '') {
+                    $daily->timezone($dailyTz);
+                }
+
+                $monthly = $schedule->command('tts:aggregate-monthly')->monthlyOn(1, $monthlyTime);
+                if (is_string($monthlyTz) && $monthlyTz !== '') {
+                    $monthly->timezone($monthlyTz);
+                }
+
+                $schedule->command('tts:cleanup')->dailyAt($cleanupTime);
+            });
+        }
     }
 }
