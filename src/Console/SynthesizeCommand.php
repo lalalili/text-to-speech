@@ -21,16 +21,27 @@ class SynthesizeCommand extends Command
 
     public function handle(TextToSpeechServiceInterface $tts): int
     {
-        $input = $this->argument('text');
-        $driver = $this->option('driver') ?: null;
+        $inputArgument = $this->argument('text');
+        if (! is_string($inputArgument) || $inputArgument === '') {
+            $this->error('請提供要合成的文字或 SSML 內容');
+
+            return self::FAILURE;
+        }
+
+        $driverOption = $this->option('driver');
+        $driver = is_string($driverOption) && $driverOption !== '' ? $driverOption : null;
 
         $options = TextToSpeechOptions::fromConfig($driver);
 
-        if ($voice = $this->option('voice')) {
+        $voiceOption = $this->option('voice');
+        if (is_string($voiceOption) && $voiceOption !== '') {
+            $voice = $voiceOption;
             $options->voice = $voice;
         }
 
-        if ($language = $this->option('language')) {
+        $languageOption = $this->option('language');
+        if (is_string($languageOption) && $languageOption !== '') {
+            $language = $languageOption;
             $options->languageCode = $language;
         }
 
@@ -40,11 +51,11 @@ class SynthesizeCommand extends Command
 
         try {
             if ($this->option('sync')) {
-                $request = $tts->synthesizeSync($input, $options);
+                $request = $tts->synthesizeSync($inputArgument, $options);
                 $this->line($request->url ?? '(URL pending)');
                 $this->info("status={$request->status} driver={$request->driver} cache_hit=".($request->cache_hit ? 'true' : 'false'));
             } else {
-                $request = $tts->queue($input, $options);
+                $request = $tts->queue($inputArgument, $options);
                 $this->info("已排入佇列。request_id={$request->id} status={$request->status}");
             }
         } catch (Throwable $e) {

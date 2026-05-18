@@ -15,7 +15,10 @@ class AggregateDailyMetricsCommand extends Command
 
     public function handle(): int
     {
-        $date = $this->option('date') ?? now()->subDay()->toDateString();
+        $dateOption = $this->option('date');
+        $date = is_string($dateOption) && $dateOption !== ''
+            ? $dateOption
+            : now()->subDay()->toDateString();
 
         $rows = TextToSpeechRequest::query()
             ->whereDate('created_at', $date)
@@ -35,16 +38,16 @@ class AggregateDailyMetricsCommand extends Command
 
         foreach ($rows as $row) {
             TextToSpeechDailyMetric::updateOrCreate(
-                ['date' => $date, 'driver' => $row->driver],
+                ['date' => $date, 'driver' => (string) $row->getAttribute('driver')],
                 [
-                    'requests_count' => (int) $row->requests_count,
-                    'success_count' => (int) $row->success_count,
-                    'failed_count' => (int) $row->failed_count,
-                    'retry_requests_count' => (int) $row->retry_requests_count,
-                    'retry_count_sum' => (int) $row->retry_count_sum,
-                    'cache_hit_count' => (int) $row->cache_hit_count,
-                    'character_count_sum' => (int) $row->character_count_sum,
-                    'estimated_cost_micros_sum' => (int) $row->estimated_cost_micros_sum,
+                    'requests_count' => (int) $row->getAttribute('requests_count'),
+                    'success_count' => (int) $row->getAttribute('success_count'),
+                    'failed_count' => (int) $row->getAttribute('failed_count'),
+                    'retry_requests_count' => (int) $row->getAttribute('retry_requests_count'),
+                    'retry_count_sum' => (int) $row->getAttribute('retry_count_sum'),
+                    'cache_hit_count' => (int) $row->getAttribute('cache_hit_count'),
+                    'character_count_sum' => (int) $row->getAttribute('character_count_sum'),
+                    'estimated_cost_micros_sum' => (int) $row->getAttribute('estimated_cost_micros_sum'),
                 ],
             );
         }

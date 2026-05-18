@@ -16,10 +16,15 @@ class StatsCommand extends Command
 
     public function handle(): int
     {
-        if ($month = $this->option('month')) {
+        $monthOption = $this->option('month');
+        if (is_string($monthOption) && $monthOption !== '') {
+            $month = $monthOption;
             $this->showMonthly($month);
         } else {
-            $date = $this->option('date') ?? now()->toDateString();
+            $dateOption = $this->option('date');
+            $date = is_string($dateOption) && $dateOption !== ''
+                ? $dateOption
+                : now()->toDateString();
             $this->showDaily($date);
         }
 
