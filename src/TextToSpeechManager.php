@@ -4,6 +4,7 @@ namespace Lalalili\TextToSpeech;
 
 use Illuminate\Support\Manager;
 use Lalalili\TextToSpeech\Drivers\AzureTextToSpeechDriver;
+use Lalalili\TextToSpeech\Drivers\GeminiTextToSpeechDriver;
 use Lalalili\TextToSpeech\Drivers\GoogleCloudTextToSpeechDriver;
 
 class TextToSpeechManager extends Manager
@@ -21,5 +22,10 @@ class TextToSpeechManager extends Manager
     public function createAzureDriver(): AzureTextToSpeechDriver
     {
         return new AzureTextToSpeechDriver;
+    }
+
+    public function createGeminiDriver(): GeminiTextToSpeechDriver
+    {
+        return new GeminiTextToSpeechDriver;
     }
 }

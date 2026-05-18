@@ -16,6 +16,14 @@ $azureRetryStatuses = is_string($azureRetryStatuses)
     ? array_values(array_filter(array_map('intval', array_map('trim', explode(',', $azureRetryStatuses)))))
     : [];
 
+$geminiRetryStatuses = env('GEMINI_TTS_RETRY_ON_STATUSES', '429,500,502,503,504');
+$geminiRetryStatuses = is_string($geminiRetryStatuses)
+    ? array_values(array_filter(array_map('intval', array_map('trim', explode(',', $geminiRetryStatuses)))))
+    : [];
+
+$geminiCostPerMillionMicros = env('GEMINI_TTS_COST_PER_MILLION_MICROS');
+$geminiCostPerMillionMicros = $geminiCostPerMillionMicros !== null ? (int) $geminiCostPerMillionMicros : null;
+
 $ttsQueueBackoff = env('TTS_QUEUE_RETRY_BACKOFF_SECONDS', '30,120,300');
 $ttsQueueBackoff = is_string($ttsQueueBackoff)
     ? array_values(array_filter(array_map('intval', array_map('trim', explode(',', $ttsQueueBackoff)))))
@@ -36,6 +44,10 @@ $googleAllowedAudioFormats = $parseList(env('GOOGLE_TTS_ALLOWED_AUDIO_FORMATS'))
 $azureAllowedVoices = $parseList(env('AZURE_TTS_ALLOWED_VOICES'));
 $azureAllowedLanguages = $parseList(env('AZURE_TTS_ALLOWED_LANGUAGES'));
 $azureAllowedAudioFormats = $parseList(env('AZURE_TTS_ALLOWED_AUDIO_FORMATS'));
+
+$geminiAllowedVoices = $parseList(env('GEMINI_TTS_ALLOWED_VOICES'));
+$geminiAllowedLanguages = $parseList(env('GEMINI_TTS_ALLOWED_LANGUAGES'));
+$geminiAllowedAudioFormats = $parseList(env('GEMINI_TTS_ALLOWED_AUDIO_FORMATS'));
 
 return [
     'default' => env('TTS_DRIVER', 'google'),
@@ -123,6 +135,29 @@ return [
             'retry_times' => (int) env('AZURE_TTS_RETRY_TIMES', 2),
             'retry_sleep_ms' => (int) env('AZURE_TTS_RETRY_SLEEP_MS', 200),
             'retry_on_statuses' => $azureRetryStatuses,
+        ],
+        'gemini' => [
+            'api_key' => env('GEMINI_TTS_API_KEY'),
+            'base_url' => env('GEMINI_TTS_BASE_URL', 'https://generativelanguage.googleapis.com'),
+            'model' => env('GEMINI_TTS_MODEL'),
+            'language_code' => env('GEMINI_TTS_LANGUAGE_CODE', 'cmn-TW'),
+            'voice' => env('GEMINI_TTS_VOICE', 'Kore'),
+            'speaking_rate' => (float) env('GEMINI_TTS_SPEAKING_RATE', 1.0),
+            'pitch' => (float) env('GEMINI_TTS_PITCH', 0.0),
+            'audio_format' => env('GEMINI_TTS_AUDIO_FORMAT', 'mp3'),
+            'ffmpeg_path' => env('GEMINI_TTS_FFMPEG_PATH', 'ffmpeg'),
+            'allowed_voices' => $geminiAllowedVoices,
+            'allowed_languages' => $geminiAllowedLanguages,
+            'allowed_audio_formats' => $geminiAllowedAudioFormats,
+            'timeout_seconds' => (float) env('GEMINI_TTS_TIMEOUT_SECONDS', 30),
+            'connect_timeout_seconds' => (float) env('GEMINI_TTS_CONNECT_TIMEOUT_SECONDS', 5),
+            'retry_times' => (int) env('GEMINI_TTS_RETRY_TIMES', 2),
+            'retry_sleep_ms' => (int) env('GEMINI_TTS_RETRY_SLEEP_MS', 200),
+            'retry_on_statuses' => $geminiRetryStatuses,
+            'pricing' => [
+                'currency' => env('GEMINI_TTS_PRICING_CURRENCY', 'USD'),
+                'cost_per_million_micros' => $geminiCostPerMillionMicros,
+            ],
         ],
     ],
 ];
