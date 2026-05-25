@@ -25,7 +25,7 @@ class GeminiTextToSpeechDriver implements TextToSpeechDriverInterface
         if ($options->speakingRate !== 1.0 || $options->pitch !== 0.0) {
             Log::warning('Gemini TTS does not support speakingRate or pitch; these parameters are ignored.', [
                 'speaking_rate' => $options->speakingRate,
-                'pitch' => $options->pitch,
+                'pitch'         => $options->pitch,
             ]);
         }
 
@@ -39,7 +39,7 @@ class GeminiTextToSpeechDriver implements TextToSpeechDriverInterface
             ],
             'generationConfig' => [
                 'responseModalities' => ['AUDIO'],
-                'speechConfig' => [
+                'speechConfig'       => [
                     'voiceConfig' => [
                         'prebuiltVoiceConfig' => [
                             'voiceName' => $voice,
@@ -78,7 +78,7 @@ class GeminiTextToSpeechDriver implements TextToSpeechDriverInterface
         $sampleRate = $this->parseSampleRate($mimeType);
 
         return match ($options->audioFormat) {
-            'mp3' => $this->pcmToMp3($pcmBytes, $sampleRate),
+            'mp3'   => $this->pcmToMp3($pcmBytes, $sampleRate),
             default => $this->wrapPcmAsWav($pcmBytes, $sampleRate),
         };
     }
@@ -260,8 +260,8 @@ class GeminiTextToSpeechDriver implements TextToSpeechDriverInterface
     private function logResponseSummary(Response $response, string $endpoint): void
     {
         Log::info('Gemini TTS response', [
-            'endpoint' => $endpoint,
-            'status' => $response->status(),
+            'endpoint'     => $endpoint,
+            'status'       => $response->status(),
             'content_type' => $response->header('Content-Type'),
             'x_request_id' => $response->header('x-request-id'),
         ]);

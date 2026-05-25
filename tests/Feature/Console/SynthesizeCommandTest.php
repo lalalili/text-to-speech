@@ -29,7 +29,7 @@ it('outputs url when using --sync and synthesizeSync succeeds', function () {
 
     Storage::fake('local');
 
-    $stub = new TextToSpeechRequest;
+    $stub = new TextToSpeechRequest();
     $stub->url = 'http://localhost/storage/tts/abc.mp3';
     $stub->status = TextToSpeechRequest::STATUS_READY;
     $stub->driver = 'google';

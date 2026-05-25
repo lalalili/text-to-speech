@@ -5,15 +5,15 @@ use Lalalili\TextToSpeech\Models\TextToSpeechMonthlyMetric;
 
 it('shows daily stats for given date', function () {
     TextToSpeechDailyMetric::create([
-        'date' => '2026-03-01',
-        'driver' => 'gemini',
-        'requests_count' => 10,
-        'success_count' => 8,
-        'failed_count' => 2,
-        'retry_requests_count' => 1,
-        'retry_count_sum' => 3,
-        'cache_hit_count' => 4,
-        'character_count_sum' => 1000,
+        'date'                      => '2026-03-01',
+        'driver'                    => 'gemini',
+        'requests_count'            => 10,
+        'success_count'             => 8,
+        'failed_count'              => 2,
+        'retry_requests_count'      => 1,
+        'retry_count_sum'           => 3,
+        'cache_hit_count'           => 4,
+        'character_count_sum'       => 1000,
         'estimated_cost_micros_sum' => 500,
     ]);
 
@@ -25,15 +25,15 @@ it('shows daily stats for given date', function () {
 
 it('shows monthly stats for given month', function () {
     TextToSpeechMonthlyMetric::create([
-        'month' => '2026-02-01',
-        'driver' => 'gemini',
-        'requests_count' => 200,
-        'success_count' => 180,
-        'failed_count' => 20,
-        'retry_requests_count' => 10,
-        'retry_count_sum' => 30,
-        'cache_hit_count' => 50,
-        'character_count_sum' => 50000,
+        'month'                     => '2026-02-01',
+        'driver'                    => 'gemini',
+        'requests_count'            => 200,
+        'success_count'             => 180,
+        'failed_count'              => 20,
+        'retry_requests_count'      => 10,
+        'retry_count_sum'           => 30,
+        'cache_hit_count'           => 50,
+        'character_count_sum'       => 50000,
         'estimated_cost_micros_sum' => 25000,
     ]);
 

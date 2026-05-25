@@ -44,13 +44,13 @@ class AggregateMonthlyMetricsCommand extends Command
             TextToSpeechMonthlyMetric::updateOrCreate(
                 ['month' => $monthStart, 'driver' => (string) $row->getAttribute('driver')],
                 [
-                    'requests_count' => (int) $row->getAttribute('requests_count'),
-                    'success_count' => (int) $row->getAttribute('success_count'),
-                    'failed_count' => (int) $row->getAttribute('failed_count'),
-                    'retry_requests_count' => (int) $row->getAttribute('retry_requests_count'),
-                    'retry_count_sum' => (int) $row->getAttribute('retry_count_sum'),
-                    'cache_hit_count' => (int) $row->getAttribute('cache_hit_count'),
-                    'character_count_sum' => (int) $row->getAttribute('character_count_sum'),
+                    'requests_count'            => (int) $row->getAttribute('requests_count'),
+                    'success_count'             => (int) $row->getAttribute('success_count'),
+                    'failed_count'              => (int) $row->getAttribute('failed_count'),
+                    'retry_requests_count'      => (int) $row->getAttribute('retry_requests_count'),
+                    'retry_count_sum'           => (int) $row->getAttribute('retry_count_sum'),
+                    'cache_hit_count'           => (int) $row->getAttribute('cache_hit_count'),
+                    'character_count_sum'       => (int) $row->getAttribute('character_count_sum'),
                     'estimated_cost_micros_sum' => (int) $row->getAttribute('estimated_cost_micros_sum'),
                 ],
             );
@@ -93,9 +93,9 @@ class AggregateMonthlyMetricsCommand extends Command
 
         try {
             Log::channel($channel)->warning($message, [
-                'month' => $month,
+                'month'       => $month,
                 'cost_micros' => $costMicros,
-                'characters' => $characters,
+                'characters'  => $characters,
             ]);
         } catch (Throwable $e) {
             $this->warn("告警發送失敗（channel={$channel}）：".$e->getMessage());

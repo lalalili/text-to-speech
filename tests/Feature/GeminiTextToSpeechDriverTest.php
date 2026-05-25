@@ -7,17 +7,17 @@ use Lalalili\TextToSpeech\Support\TextToSpeechOptions;
 function geminiConfig(array $overrides = []): void
 {
     config()->set('text-to-speech.drivers.gemini', array_merge([
-        'api_key' => 'test-key',
-        'base_url' => 'https://generativelanguage.googleapis.com',
-        'model' => 'gemini-test-tts',
-        'voice' => 'Kore',
-        'audio_format' => 'linear16',
-        'ffmpeg_path' => 'ffmpeg',
-        'timeout_seconds' => 10,
+        'api_key'                 => 'test-key',
+        'base_url'                => 'https://generativelanguage.googleapis.com',
+        'model'                   => 'gemini-test-tts',
+        'voice'                   => 'Kore',
+        'audio_format'            => 'linear16',
+        'ffmpeg_path'             => 'ffmpeg',
+        'timeout_seconds'         => 10,
         'connect_timeout_seconds' => 5,
-        'retry_times' => 0,
-        'retry_sleep_ms' => 0,
-        'retry_on_statuses' => [],
+        'retry_times'             => 0,
+        'retry_sleep_ms'          => 0,
+        'retry_on_statuses'       => [],
     ], $overrides));
 }
 
@@ -31,7 +31,7 @@ function fakePcmResponse(int $sampleRate = 24000): array
                 'parts' => [[
                     'inlineData' => [
                         'mimeType' => "audio/L16;codec=pcm;rate={$sampleRate}",
-                        'data' => base64_encode($pcm),
+                        'data'     => base64_encode($pcm),
                     ],
                 ]],
             ],
@@ -43,7 +43,7 @@ it('synthesizes audio and returns WAV bytes starting with RIFF', function () {
     Http::fake(['*' => Http::response(fakePcmResponse())]);
     geminiConfig(['audio_format' => 'linear16']);
 
-    $driver = new GeminiTextToSpeechDriver;
+    $driver = new GeminiTextToSpeechDriver();
     $options = new TextToSpeechOptions(
         inputType: 'text',
         voice: 'Kore',
@@ -62,7 +62,7 @@ it('includes AUDIO responseModalities and correct voiceName in request', functio
     Http::fake(['*' => Http::response(fakePcmResponse())]);
     geminiConfig(['voice' => 'Puck', 'audio_format' => 'linear16']);
 
-    $driver = new GeminiTextToSpeechDriver;
+    $driver = new GeminiTextToSpeechDriver();
     $options = new TextToSpeechOptions(
         inputType: 'text',
         voice: 'Puck',
@@ -86,7 +86,7 @@ it('sends the api key in x-goog-api-key header', function () {
     Http::fake(['*' => Http::response(fakePcmResponse())]);
     geminiConfig(['api_key' => 'my-secret-key', 'audio_format' => 'linear16']);
 
-    $driver = new GeminiTextToSpeechDriver;
+    $driver = new GeminiTextToSpeechDriver();
     $options = new TextToSpeechOptions(
         inputType: 'text',
         voice: 'Kore',
@@ -104,7 +104,7 @@ it('sends the api key in x-goog-api-key header', function () {
 it('throws InvalidArgumentException for ssml input type', function () {
     geminiConfig();
 
-    $driver = new GeminiTextToSpeechDriver;
+    $driver = new GeminiTextToSpeechDriver();
     $options = new TextToSpeechOptions(
         inputType: 'ssml',
         voice: 'Kore',
@@ -121,7 +121,7 @@ it('throws RuntimeException on non-2xx response', function () {
     Http::fake(['*' => Http::response('Internal Server Error', 500)]);
     geminiConfig();
 
-    $driver = new GeminiTextToSpeechDriver;
+    $driver = new GeminiTextToSpeechDriver();
     $options = new TextToSpeechOptions(
         inputType: 'text',
         voice: 'Kore',
@@ -137,7 +137,7 @@ it('throws RuntimeException on non-2xx response', function () {
 it('throws RuntimeException when model is not configured', function () {
     geminiConfig(['model' => '']);
 
-    $driver = new GeminiTextToSpeechDriver;
+    $driver = new GeminiTextToSpeechDriver();
     $options = new TextToSpeechOptions(
         inputType: 'text',
         voice: 'Kore',
@@ -153,7 +153,7 @@ it('throws RuntimeException when model is not configured', function () {
 it('throws RuntimeException when api key is not configured', function () {
     geminiConfig(['api_key' => '']);
 
-    $driver = new GeminiTextToSpeechDriver;
+    $driver = new GeminiTextToSpeechDriver();
     $options = new TextToSpeechOptions(
         inputType: 'text',
         voice: 'Kore',
@@ -172,7 +172,7 @@ it('logs warning when speakingRate is not default', function () {
 
     \Illuminate\Support\Facades\Log::spy();
 
-    $driver = new GeminiTextToSpeechDriver;
+    $driver = new GeminiTextToSpeechDriver();
     $options = new TextToSpeechOptions(
         inputType: 'text',
         voice: 'Kore',
@@ -195,7 +195,7 @@ it('logs warning when pitch is not default', function () {
 
     \Illuminate\Support\Facades\Log::spy();
 
-    $driver = new GeminiTextToSpeechDriver;
+    $driver = new GeminiTextToSpeechDriver();
     $options = new TextToSpeechOptions(
         inputType: 'text',
         voice: 'Kore',
@@ -216,7 +216,7 @@ it('parses sample rate from mimeType into WAV header', function () {
     Http::fake(['*' => Http::response(fakePcmResponse(22050))]);
     geminiConfig(['audio_format' => 'linear16']);
 
-    $driver = new GeminiTextToSpeechDriver;
+    $driver = new GeminiTextToSpeechDriver();
     $options = new TextToSpeechOptions(
         inputType: 'text',
         voice: 'Kore',
