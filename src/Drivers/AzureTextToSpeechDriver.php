@@ -28,8 +28,8 @@ class AzureTextToSpeechDriver implements TextToSpeechDriverInterface
 
         $request = Http::withHeaders([
             'Ocp-Apim-Subscription-Key' => $key,
-            'X-Microsoft-OutputFormat'  => $this->resolveOutputFormat($options),
-            'User-Agent'                => $this->resolveUserAgent(),
+            'X-Microsoft-OutputFormat' => $this->resolveOutputFormat($options),
+            'User-Agent' => $this->resolveUserAgent(),
         ])->withBody($ssml, 'application/ssml+xml');
 
         $response = $this->applyHttpOptions($request)->post($endpoint);
@@ -162,7 +162,7 @@ class AzureTextToSpeechDriver implements TextToSpeechDriverInterface
         return match ($options->audioFormat) {
             'ogg_opus' => 'ogg-16khz-16bit-mono-opus',
             'linear16' => 'riff-16khz-16bit-mono-pcm',
-            default    => 'audio-16khz-128kbitrate-mono-mp3',
+            default => 'audio-16khz-128kbitrate-mono-mp3',
         };
     }
 
@@ -251,12 +251,12 @@ class AzureTextToSpeechDriver implements TextToSpeechDriverInterface
         $length = strlen((string) $response->body());
 
         Log::info('Azure TTS response', [
-            'endpoint'       => $endpoint,
-            'status'         => $response->status(),
+            'endpoint' => $endpoint,
+            'status' => $response->status(),
             'content_length' => $contentLength,
-            'body_length'    => $length,
-            'content_type'   => $response->header('Content-Type'),
-            'x_request_id'   => $response->header('x-requestid'),
+            'body_length' => $length,
+            'content_type' => $response->header('Content-Type'),
+            'x_request_id' => $response->header('x-requestid'),
         ]);
     }
 }

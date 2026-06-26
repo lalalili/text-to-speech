@@ -16,16 +16,16 @@ class TextToSpeechManager extends Manager
 
     public function createGoogleDriver(): GoogleCloudTextToSpeechDriver
     {
-        return new GoogleCloudTextToSpeechDriver();
+        return new GoogleCloudTextToSpeechDriver;
     }
 
     public function createAzureDriver(): AzureTextToSpeechDriver
     {
-        return new AzureTextToSpeechDriver();
+        return new AzureTextToSpeechDriver;
     }
 
     public function createGeminiDriver(): GeminiTextToSpeechDriver
     {
-        return new GeminiTextToSpeechDriver();
+        return new GeminiTextToSpeechDriver;
     }
 }

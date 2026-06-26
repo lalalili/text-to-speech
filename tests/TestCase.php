@@ -18,14 +18,14 @@ class TestCase extends OrchestraTestCase
     {
         $app['config']->set('database.default', 'sqlite');
         $app['config']->set('database.connections.sqlite', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
 
         $app['config']->set('filesystems.disks.local', [
-            'driver'     => 'local',
-            'root'       => storage_path('app'),
+            'driver' => 'local',
+            'root' => storage_path('app'),
             'visibility' => 'public',
         ]);
     }

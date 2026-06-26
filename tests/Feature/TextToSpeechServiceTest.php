@@ -38,20 +38,20 @@ it('reuses cached audio when file exists', function () {
 });
 
 it('strips ssml tags when counting characters', function () {
-    $counter = new DefaultCharacterCounter();
+    $counter = new DefaultCharacterCounter;
     $ssml = '<speak>你好</speak>';
 
     expect($counter->count($ssml, 'ssml'))->toBe(mb_strlen('你好', 'UTF-8'));
 });
 
 it('counts plain text characters without stripping', function () {
-    $counter = new DefaultCharacterCounter();
+    $counter = new DefaultCharacterCounter;
 
     expect($counter->count('你好世界', 'text'))->toBe(4);
 });
 
 it('throws for azure driver stub', function () {
-    $driver = new AzureTextToSpeechDriver();
+    $driver = new AzureTextToSpeechDriver;
     $options = TextToSpeechOptions::fromConfig();
 
     $driver->synthesize('hello', $options);

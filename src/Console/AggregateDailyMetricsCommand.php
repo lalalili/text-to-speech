@@ -40,13 +40,13 @@ class AggregateDailyMetricsCommand extends Command
             TextToSpeechDailyMetric::updateOrCreate(
                 ['date' => $date, 'driver' => (string) $row->getAttribute('driver')],
                 [
-                    'requests_count'            => (int) $row->getAttribute('requests_count'),
-                    'success_count'             => (int) $row->getAttribute('success_count'),
-                    'failed_count'              => (int) $row->getAttribute('failed_count'),
-                    'retry_requests_count'      => (int) $row->getAttribute('retry_requests_count'),
-                    'retry_count_sum'           => (int) $row->getAttribute('retry_count_sum'),
-                    'cache_hit_count'           => (int) $row->getAttribute('cache_hit_count'),
-                    'character_count_sum'       => (int) $row->getAttribute('character_count_sum'),
+                    'requests_count' => (int) $row->getAttribute('requests_count'),
+                    'success_count' => (int) $row->getAttribute('success_count'),
+                    'failed_count' => (int) $row->getAttribute('failed_count'),
+                    'retry_requests_count' => (int) $row->getAttribute('retry_requests_count'),
+                    'retry_count_sum' => (int) $row->getAttribute('retry_count_sum'),
+                    'cache_hit_count' => (int) $row->getAttribute('cache_hit_count'),
+                    'character_count_sum' => (int) $row->getAttribute('character_count_sum'),
                     'estimated_cost_micros_sum' => (int) $row->getAttribute('estimated_cost_micros_sum'),
                 ],
             );

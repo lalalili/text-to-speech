@@ -75,13 +75,13 @@ class StatsCommand extends Command
     private function formatRows(array $data): array
     {
         $labels = [
-            'requests_count'            => '總請求數',
-            'success_count'             => '成功數',
-            'failed_count'              => '失敗數',
-            'retry_requests_count'      => '重試請求數',
-            'retry_count_sum'           => '重試總次數',
-            'cache_hit_count'           => '快取命中數',
-            'character_count_sum'       => '字元總數',
+            'requests_count' => '總請求數',
+            'success_count' => '成功數',
+            'failed_count' => '失敗數',
+            'retry_requests_count' => '重試請求數',
+            'retry_count_sum' => '重試總次數',
+            'cache_hit_count' => '快取命中數',
+            'character_count_sum' => '字元總數',
             'estimated_cost_micros_sum' => '估算費用（micros）',
         ];
 

@@ -2,6 +2,7 @@
 
 namespace Lalalili\TextToSpeech\Support;
 
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
@@ -10,7 +11,7 @@ class DefaultUrlResolver
     public static function resolve(string $disk, string $path, ?int $temporaryUrlTtlMinutes = null): string
     {
         $filesystem = Storage::disk($disk);
-        /** @var \Illuminate\Filesystem\FilesystemAdapter $filesystem */
+        /** @var FilesystemAdapter $filesystem */
         $visibility = config('text-to-speech.storage.visibility');
 
         if ($visibility === null) {

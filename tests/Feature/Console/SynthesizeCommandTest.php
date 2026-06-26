@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
+use Lalalili\TextToSpeech\Contracts\TextToSpeechServiceInterface;
 use Lalalili\TextToSpeech\Jobs\GenerateTextToSpeechAudioJob;
 use Lalalili\TextToSpeech\Models\TextToSpeechRequest;
 
@@ -29,13 +30,13 @@ it('outputs url when using --sync and synthesizeSync succeeds', function () {
 
     Storage::fake('local');
 
-    $stub = new TextToSpeechRequest();
+    $stub = new TextToSpeechRequest;
     $stub->url = 'http://localhost/storage/tts/abc.mp3';
     $stub->status = TextToSpeechRequest::STATUS_READY;
     $stub->driver = 'google';
     $stub->cache_hit = false;
 
-    $this->mock(\Lalalili\TextToSpeech\Contracts\TextToSpeechServiceInterface::class)
+    $this->mock(TextToSpeechServiceInterface::class)
         ->shouldReceive('synthesizeSync')
         ->once()
         ->andReturn($stub);
@@ -46,7 +47,7 @@ it('outputs url when using --sync and synthesizeSync succeeds', function () {
 });
 
 it('returns failure when synthesizeSync throws', function () {
-    $this->mock(\Lalalili\TextToSpeech\Contracts\TextToSpeechServiceInterface::class)
+    $this->mock(TextToSpeechServiceInterface::class)
         ->shouldReceive('synthesizeSync')
         ->once()
         ->andThrow(new RuntimeException('API key missing'));
