@@ -49,6 +49,9 @@
             "aliases": {
                 "TextToSpeech": "Lalalili\\TextToSpeech\\Facades\\TextToSpeech"
             }
+        },
+        "branch-alias": {
+            "dev-main": "1.0.x-dev"
         }
     },
     "config": {
